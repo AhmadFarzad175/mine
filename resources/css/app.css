@@ -1,0 +1,98 @@
+html,body{
+
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    
+    
+}
+
+ .v-navigation-drawer__content{
+    background-color: #F8F8F8;
+
+  }
+  .toolbar , .v-toolbar__content{
+    background-color: transparent !important;
+  } 
+
+  .v-navigation-drawer__content{
+    min-width: 270px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+
+  }
+
+  a {
+    text-decoration: none !important;
+
+  }
+
+  .v-main{
+    margin-left: 270px;
+    background-color: white !important;
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    border-radius: 30px;
+    min-height: 95vh;
+
+  
+  }
+
+  .v-data-table__thead {
+    background: #ecf1f4 !important;
+
+  }
+  
+
+   .v-data-table__tr > :nth-child(1)  {
+
+    border-left: 4px solid #112f53 !important; 
+    
+   
+
+  }
+
+  .v-data-table__tr > :nth-child(n)  {
+
+    border-top: 4.8px solid white !important;
+
+   
+
+  }
+ 
+
+  .v-table > :nth-child(1) > :nth-child(1) > :nth-child(1) > :nth-child(1) > :nth-child(1)  {
+
+    border-left: 4px solid #112f53 !important; 
+
+  
+  
+  }
+  
+
+   
+  table {
+    border-spacing: 0px !important;
+    border-collapse: collapse !important;
+
+}
+
+.v-data-table__tr:nth-child(odd) {
+  background-color: #f9f9f9;  /* Light gray for odd rows */
+}
+
+.v-data-table__tr:nth-child(even) {
+  background-color: #ffffff;  /* White for even rows */
+}
+
+
+    .v-list-item-title {
+    font-size: 1rem !important;
+   }
+  
+
+ 
+
+
+
