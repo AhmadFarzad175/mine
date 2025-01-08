@@ -24,7 +24,11 @@
                         <v-list density="default" nav>
                             <!-- dashboard start here -->
                             <v-list-item
-                                v-if="AuthRepository.permissions.includes('dashboard_view')"
+                                v-if="
+                                    AuthRepository.permissions.includes(
+                                        'dashboard_view'
+                                    )
+                                "
                                 prepend-icon="mdi-view-dashboard"
                                 title="Dashboard"
                                 color="#112F53"
@@ -32,6 +36,49 @@
                                 @click="toggleDashboard"
                             ></v-list-item>
                             <!-- dashboard end here -->
+
+                            <!-- extract and its item start here -->
+                            <v-list-item
+                                prepend-icon="mdi-cart"
+                                title="Extract"
+                                color="#112F53"
+                                :class="{ 'active-item': isExtractVisible }"
+                                @click="toggleExtract"
+                                v-if="hasPermissionSale"
+                            ></v-list-item>
+
+                            <v-list v-if="isExtractVisible">
+                                <router-link
+                                    v-for="item in AuthRepository.menubar
+                                        .menuExtract"
+                                    :key="item.id"
+                                    :to="item.route"
+                                    class="no-underline menu-title"
+                                    :class="{
+                                        'active-item': (selectedExtract ==
+                                            item.id),
+                                    }"
+                                    exact-active-class="bg-primary text-white"
+                                    @click="setSelectedExtract(item.id)"
+                                >
+                                    <v-list-item
+                                        v-if="
+                                            AuthRepository.permissions.includes(
+                                                item.permission
+                                            )
+                                        "
+                                        :title="item.title"
+                                        :prepend-icon="item.icon"
+                                        color="#112F53"
+                                        :class="{
+                                            'active-sub-item':
+                                                selectedExtract === item.id,
+                                        }"
+                                        class="child submenu-item"
+                                    />
+                                </router-link>
+                            </v-list>
+                            <!-- extract and its item end here -->
 
                             <!-- sales and its item start here -->
                             <v-list-item
@@ -45,20 +92,30 @@
 
                             <v-list v-if="isSaleVisible">
                                 <router-link
-                                    v-for="item in AuthRepository.menubar.menuSale"
+                                    v-for="item in AuthRepository.menubar
+                                        .menuSale"
                                     :key="item.id"
                                     :to="item.route"
                                     class="no-underline menu-title"
-                                    :class="{ 'active-item': selectedSale === item.id }"
+                                    :class="{
+                                        'active-item': selectedSale === item.id,
+                                    }"
                                     exact-active-class="bg-primary text-white"
                                     @click="setSelectedSale(item.id)"
                                 >
                                     <v-list-item
-                                        v-if="AuthRepository.permissions.includes(item.permission)"
+                                        v-if="
+                                            AuthRepository.permissions.includes(
+                                                item.permission
+                                            )
+                                        "
                                         :title="item.title"
                                         :prepend-icon="item.icon"
                                         color="#112F53"
-                                        :class="{ 'active-sub-item': selectedSale === item.id }"
+                                        :class="{
+                                            'active-sub-item':
+                                                selectedSale === item.id,
+                                        }"
                                         class="child submenu-item"
                                     />
                                 </router-link>
@@ -77,20 +134,31 @@
 
                             <v-list v-if="isExpenseVisible">
                                 <router-link
-                                    v-for="item in AuthRepository.menubar.menuExpense"
+                                    v-for="item in AuthRepository.menubar
+                                        .menuExpense"
                                     :key="item.id"
                                     :to="item.route"
                                     class="no-underline menu-title"
-                                    :class="{ 'active-item': selectedExpense === item.id }"
+                                    :class="{
+                                        'active-item':
+                                            selectedExpense === item.id,
+                                    }"
                                     exact-active-class="bg-primary text-white"
                                     @click="setSelectedExpense(item.id)"
                                 >
                                     <v-list-item
-                                        v-if="AuthRepository.permissions.includes(item.permission)"
+                                        v-if="
+                                            AuthRepository.permissions.includes(
+                                                item.permission
+                                            )
+                                        "
                                         :title="item.title"
                                         :prepend-icon="item.icon"
                                         color="#112F53"
-                                        :class="{ 'active-sub-item': selectedExpense === item.id }"
+                                        :class="{
+                                            'active-sub-item':
+                                                selectedExpense === item.id,
+                                        }"
                                         class="child submenu-item"
                                     />
                                 </router-link>
@@ -109,20 +177,31 @@
 
                             <v-list v-if="isPeopleVisible">
                                 <router-link
-                                    v-for="item in AuthRepository.menubar.menuPeople"
+                                    v-for="item in AuthRepository.menubar
+                                        .menuPeople"
                                     :key="item.id"
                                     :to="item.route"
                                     class="no-underline menu-title"
-                                    :class="{ 'active-item': selectedPeople === item.id }"
+                                    :class="{
+                                        'active-item':
+                                            selectedPeople === item.id,
+                                    }"
                                     exact-active-class="bg-primary text-white"
                                     @click="setSelectedPeople(item.id)"
                                 >
                                     <v-list-item
-                                     v-if="AuthRepository.permissions.includes(item.permission)"
+                                        v-if="
+                                            AuthRepository.permissions.includes(
+                                                item.permission
+                                            )
+                                        "
                                         :title="item.title"
                                         :prepend-icon="item.icon"
                                         color="#112F53"
-                                        :class="{ 'active-sub-item': selectedPeople === item.id }"
+                                        :class="{
+                                            'active-sub-item':
+                                                selectedPeople === item.id,
+                                        }"
                                         class="child submenu-item"
                                     />
                                 </router-link>
@@ -141,22 +220,32 @@
 
                             <v-list v-if="isReportVisible">
                                 <router-link
-                                    v-for="item in AuthRepository.menubar.menuReport"
+                                    v-for="item in AuthRepository.menubar
+                                        .menuReport"
                                     :key="item.id"
                                     :to="item.route"
                                     class="no-underline menu-title"
-                                    :class="{ 'active-item': selectedReport === item.id }"
+                                    :class="{
+                                        'active-item':
+                                            selectedReport === item.id,
+                                    }"
                                     exact-active-class="bg-primary text-white"
                                     @click="setSelectedReport(item.id)"
                                 >
                                     <v-list-item
-                                        v-if="AuthRepository.permissions.includes(item.permission)"
+                                        v-if="
+                                            AuthRepository.permissions.includes(
+                                                item.permission
+                                            )
+                                        "
                                         :title="item.title"
                                         :prepend-icon="item.icon"
                                         color="#112F53"
-                                        :class="{ 'active-sub-item': selectedReport === item.id }"
+                                        :class="{
+                                            'active-sub-item':
+                                                selectedReport === item.id,
+                                        }"
                                         class="child submenu-item"
-                                        
                                     />
                                 </router-link>
                             </v-list>
@@ -174,20 +263,31 @@
 
                             <v-list v-if="isSettingVisible">
                                 <router-link
-                                    v-for="item in AuthRepository.menubar.menuSetting"
+                                    v-for="item in AuthRepository.menubar
+                                        .menuSetting"
                                     :key="item.id"
                                     :to="item.route"
                                     class="no-underline menu-title"
-                                    :class="{ 'active-item': selectedSetting === item.id }"
+                                    :class="{
+                                        'active-item':
+                                            selectedSetting === item.id,
+                                    }"
                                     exact-active-class="bg-primary text-white"
                                     @click="setSelectedSetting(item.id)"
                                 >
                                     <v-list-item
-                                        v-if="AuthRepository.permissions.includes(item.permission)"
+                                        v-if="
+                                            AuthRepository.permissions.includes(
+                                                item.permission
+                                            )
+                                        "
                                         :title="item.title"
                                         :prepend-icon="item.icon"
                                         color="#112F53"
-                                        :class="{ 'active-sub-item': selectedSetting === item.id }"
+                                        :class="{
+                                            'active-sub-item':
+                                                selectedSetting === item.id,
+                                        }"
                                         class="child submenu-item"
                                     />
                                 </router-link>
@@ -198,9 +298,15 @@
                 </transition>
 
                 <v-list density="default" class="footer-nav" nav>
-                    <v-divider :thickness="2" class="border-opacity-50"></v-divider>
+                    <v-divider
+                        :thickness="2"
+                        class="border-opacity-50"
+                    ></v-divider>
                     <div>
-                        <v-card class="mx-auto transparent-card" max-width="425">
+                        <v-card
+                            class="mx-auto transparent-card"
+                            max-width="425"
+                        >
                             <v-list lines="two">
                                 <v-menu
                                     activator="parent"
@@ -224,14 +330,28 @@
 
                                     <v-card class="dropdown-card">
                                         <v-list>
-                                            <v-list-item @click="navigateToProfile" class="menu-item">
-                                                <v-icon class="menu-icon">mdi-account-circle</v-icon>
-                                                <span class="menu-text">Profile</span>
+                                            <v-list-item
+                                                @click="navigateToProfile"
+                                                class="menu-item"
+                                            >
+                                                <v-icon class="menu-icon"
+                                                    >mdi-account-circle</v-icon
+                                                >
+                                                <span class="menu-text"
+                                                    >Profile</span
+                                                >
                                             </v-list-item>
 
-                                            <v-list-item @click="logout" class="menu-item">
-                                                <v-icon class="menu-icon">mdi-logout</v-icon>
-                                                <span class="menu-text">{{ $t('logout') }}</span>
+                                            <v-list-item
+                                                @click="logout"
+                                                class="menu-item"
+                                            >
+                                                <v-icon class="menu-icon"
+                                                    >mdi-logout</v-icon
+                                                >
+                                                <span class="menu-text">{{
+                                                    $t("logout")
+                                                }}</span>
                                             </v-list-item>
                                         </v-list>
                                     </v-card>
@@ -248,7 +368,6 @@
     </v-card>
 </template>
 
-
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router"; // Import useRouter
@@ -260,36 +379,43 @@ const hasPermission = AuthRepository.hasPermission;
 // console.log(AuthRepository.permissions, 'ppermissions')
 
 const hasExpensePermission = computed(() => {
-  return AuthRepository.menubar.menuExpense.some(item => AuthRepository.permissions.includes(item.permission));
+    return AuthRepository.menubar.menuExpense.some((item) =>
+        AuthRepository.permissions.includes(item.permission)
+    );
 });
-const hasPermissionSale = computed(()=>{
-    return AuthRepository.menubar.menuSale.some(item => AuthRepository.permissions.includes(item.permission));
+const hasPermissionSale = computed(() => {
+    return AuthRepository.menubar.menuSale.some((item) =>
+        AuthRepository.permissions.includes(item.permission)
+    );
 });
 
-const hasPermissionPeople = computed(()=>{
-    return AuthRepository.menubar.menuPeople.some(item => AuthRepository.permissions.includes(item.permission));
+const hasPermissionPeople = computed(() => {
+    return AuthRepository.menubar.menuPeople.some((item) =>
+        AuthRepository.permissions.includes(item.permission)
+    );
+});
 
-})
+const hasPermissionReport = computed(() => {
+    return AuthRepository.menubar.menuReport.some((item) =>
+        AuthRepository.permissions.includes(item.permission)
+    );
+});
 
-const hasPermissionReport = computed(()=>{
-    return AuthRepository.menubar.menuReport.some(item => AuthRepository.permissions.includes(item.permission));
-
-})
-
-const hasPermissionSetting = computed(()=>{
-    return AuthRepository.menubar.menuSetting.some(item => AuthRepository.permissions.includes(item.permission));
-
-})
-
-
+const hasPermissionSetting = computed(() => {
+    return AuthRepository.menubar.menuSetting.some((item) =>
+        AuthRepository.permissions.includes(item.permission)
+    );
+});
 
 const router = useRouter(); // Initialize the router
 const drawer = ref(true);
 const rail = ref(false);
+const isExtractVisible = ref(false);
 const isSaleVisible = ref(false);
 const isDashboardVisible = ref(false);
 const isExpenseVisible = ref(false);
 const isPeopleVisible = ref(false);
+const selectedExtract = ref(null);
 const selectedSale = ref(null);
 const selectedExpense = ref(null);
 const selectedPeople = ref(null);
@@ -301,11 +427,36 @@ const isSettingVisible = ref(false);
 const navigateToProfile = () => {
     router.push("/profile");
 };
+
+const toggleExtract = () => {
+    isExtractVisible.value = !isExtractVisible.value;
+    if (isExtractVisible.value) {
+        selectedExtract.value = null;
+    }
+
+    isSaleVisible.value = false;
+    selectedSale.value = null;
+
+    isExpenseVisible.value = false;
+    selectedExpense.value = null;
+    isDashboardVisible.value = false;
+
+    isPeopleVisible.value = false;
+    selectedPeople.value = null;
+    isReportVisible.value = false;
+    selectedReport.value = null;
+    isSettingVisible.value = false;
+    selectedSetting.value = null;
+};
+
 const toggleSale = () => {
     isSaleVisible.value = !isSaleVisible.value;
     if (isSaleVisible.value) {
         selectedSale.value = null;
     }
+    isExtractVisible.value = false;
+    selectedExtract.value = null;
+
     isExpenseVisible.value = false;
     selectedExpense.value = null;
     isDashboardVisible.value = false;
@@ -319,6 +470,8 @@ const toggleSale = () => {
 };
 const toggleDashboard = () => {
     isDashboardVisible.value = true;
+    isExtractVisible.value = false;
+    selectedExtract.value = null;
     isSaleVisible.value = false;
     isExpenseVisible.value = false;
     selectedSale.value = null;
@@ -337,6 +490,9 @@ const toggleExpense = () => {
     if (isExpenseVisible.value) {
         selectedExpense.value = null;
     }
+    isExtractVisible.value = false;
+    selectedExtract.value = null;
+
     isSaleVisible.value = false;
     selectedSale.value = null;
     isDashboardVisible.value = false;
@@ -359,6 +515,8 @@ const logout = (currentRoute) => {
 const toggleReport = () => {
     isReportVisible.value = !isReportVisible.value;
     isDashboardVisible.value = false;
+    isExtractVisible.value = false;
+    selectedExtract.value = null;
     isSaleVisible.value = false;
     isExpenseVisible.value = false;
     selectedExpense.value = null;
@@ -372,6 +530,8 @@ const toggleReport = () => {
 const togglePeople = () => {
     isPeopleVisible.value = !isPeopleVisible.value;
     isDashboardVisible.value = false;
+    isExtractVisible.value = false;
+    selectedExtract.value = null;
     isSaleVisible.value = false;
     isExpenseVisible.value = false;
     selectedExpense.value = null;
@@ -385,6 +545,8 @@ const togglePeople = () => {
 const toggleSetting = () => {
     isSettingVisible.value = !isSettingVisible.value;
     isDashboardVisible.value = false;
+    isExtractVisible.value = false;
+    selectedExtract.value = null;
     isSaleVisible.value = false;
     isExpenseVisible.value = false;
     selectedExpense.value = null;
@@ -393,6 +555,10 @@ const toggleSetting = () => {
     selectedPeople.value = null;
     isReportVisible.value = false;
     selectedReport.value = null;
+};
+
+const setSelectedExtract = (id) => {
+    selectedExtract.value = id;
 };
 
 const setSelectedSale = (id) => {
@@ -414,8 +580,6 @@ const setSelectedReport = (id) => {
 const setSelectedSetting = (id) => {
     selectedSetting.value = id;
 };
-
-
 </script>
 
 <style scoped>

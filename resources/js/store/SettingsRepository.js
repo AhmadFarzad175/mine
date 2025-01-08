@@ -26,7 +26,15 @@ export let useSettingRepository = defineStore("SettingRepository", {
             Currency: reactive([]),
             // symbol
             currencies: reactive([]),
-          
+            generalCurrencyId: 1, 
+            currencyIndex:0, 
+
+
+            // money account
+            moneyAccounts: reactive([]),
+            moneyAccount: reactive([]),
+            moneyAccountSearch: ref(""),
+            
             createCompony: reactive([]),
             companies: reactive([]),
             // role Permission
@@ -181,6 +189,14 @@ export let useSettingRepository = defineStore("SettingRepository", {
             // Log the response to see the fetched data
         
             // Update generalCurrencyId and currencyIndex based on the fetched data
+            if (this.currencies.length > 0) {
+                this.generalCurrencyId = this.currencies[0].id; // Assuming you want to set it to the first currency's ID
+                this.currencyIndex = 0; // Set to 0 to reference the first currency
+            } else {
+                // Handle case when there are no currencies fetched
+                this.generalCurrencyId = null; // Or set it to a default value
+                this.currencyIndex = null; // Or set it to a default value
+            }
           
         },
 
@@ -236,6 +252,83 @@ export let useSettingRepository = defineStore("SettingRepository", {
     
             const response = await axios(config);
             this.fetchCurrencies({
+                page: this.page,
+                itemsPerPage: this.itemsPerPage,
+            });
+        },
+
+
+         /////////////////////////// Money Account  /////////////////////////////////////
+         async fetchMoneyAccounts() {
+            this.loading = true;
+            const config = {
+                url: "moneyAccounts",
+            };
+            const response = await axios(config);
+            
+            // Mutate the reactive array correctly
+
+            this.moneyAccounts = response.data.data;
+            console.log(this.moneyAccounts);
+        
+            this.loading = false;
+
+            this.fetchCurrencies();
+            // Log the response to see the fetched data
+        },
+
+        async CreateMoneyAccount(formData){
+
+            try {
+                // Adding a custom header to the Axios request
+                const config = {
+                    method: "POST",
+                    url: "moneyAccounts",
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    data: formData,
+                };
+                const response = await axios(config);
+               
+                this.fetchMoneyAccounts();
+
+            } catch (err) {
+                // If there's an error, handle it here
+            }
+
+        },
+
+        async UpdateMoneyAccount(id, data) {
+            try {
+                const config = {
+                    method: "PUT",
+                    url: `moneyAccounts/${id}`,
+        
+                    data: data,
+                };
+        
+                // Using Axios to make a post request with async/await and custom headers
+                const response = await axios(config);
+                this.updateDialog = false;
+                this.fetchMoneyAccounts({
+                    page: this.page,
+                    itemsPerPage: this.itemsPerPage,
+                });
+            } catch (err) {
+                // If there's an error, set the error in the store
+                this.error = err;
+            }
+        },
+
+        async DeleteMoneyAccount(id) {
+            const config = {
+                method: "DELETE",
+                url: "moneyAccounts/" + id,
+            };
+    
+            const response = await axios(config);
+            this.fetchMoneyAccounts({
                 page: this.page,
                 itemsPerPage: this.itemsPerPage,
             });

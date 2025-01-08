@@ -28,7 +28,9 @@ use App\Http\Controllers\ExpenseCategoryReportController;
 use App\Http\Controllers\LoanPeopleController;
 use App\Http\Controllers\LoanPaymentSentController;
 use App\Http\Controllers\LoanPaymentReceivedController;
+use App\Http\Controllers\MoneyAccountController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\StakeholderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,12 +83,16 @@ Route::apiResource('OwnerPickup',OwnerPickupController::class);
 Route::apiResource('Suppliers',SupplierController::class);
 // Route::post('Suppliers/update/{id}',[SupplierController::class, 'update']);
 
+Route::apiResource('stakeholders', StakeholderController::class);
+Route::post('stakeholders/update/{stakeholder}', [StakeholderController::class, 'update']);
+
 
 
 
 //////////////////// Currency //////////////////////
 // currency added backend
-Route::apiResource('currency',CurrencyController::class);
+Route::apiResource('currency', CurrencyController::class);
+Route::apiResource('moneyAccounts', MoneyAccountController::class);
 
 //////////////////// REports //////////////////////
 
@@ -123,7 +129,6 @@ Route::get('/roles', [RolePermissionController::class , 'indexRole']);
 
 
 Route::post('SystemSetting/update/{id}',[SystemSettingController::class, 'update']);
-
 Route::apiResource('/SystemSetting', SystemSettingController::class);
 
 

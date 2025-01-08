@@ -54,6 +54,13 @@ class AdminSeeder extends Seeder
             'createCurrency',
             'editCurrency',
             'deleteCurrency',
+
+             // Currency Management
+             'viewMoneyAccounts',
+             'viewMoneyAccount',
+             'createMoneyAccount',
+             'editMoneyAccount',
+             'deleteMoneyAccount',
         
             // Owner Pickup
             'viewOwnerPickup',
@@ -108,6 +115,13 @@ class AdminSeeder extends Seeder
             'editExpenseProduct',
             'deleteExpenseProduct',
         
+            // Extract
+            'viewExtract',
+            'viewExtracts',
+            'createExtract',
+            'editExtract',
+            'deleteExtract',
+
             // Sales
             'viewSale',
             'viewSales',
@@ -163,6 +177,12 @@ class AdminSeeder extends Seeder
             'createRoles',
             'editRoles',
             'deleteRoles',
+
+            'viewStakeholders',
+            'viewStakeholder',
+            'createStakeholder',
+            'editStakeholder',
+            'deleteStakeholder',
         
             // System Settings
             'viewSystemSettings',

@@ -14,7 +14,7 @@ export const useAuthRepository = defineStore("AuthRepository", {
     router: useRouter(), // Vue Router instance
     rail: false, // Sidebar toggle
     menubar: reactive({
-      menuSale: ref([
+      menuExtract: ref([
         {
           id: 1,
           title: "Create Sale",
@@ -36,6 +36,29 @@ export const useAuthRepository = defineStore("AuthRepository", {
           route: "/saleProduct",
           permission: "viewSaleProducts",
         },
+      ]),
+      menuSale: ref([
+        {
+          id: 1,
+          title: "Create Sale",
+          icon: "mdi-circle-small",
+          route: "/createSales",
+          permission: "createSale",
+        },
+        {
+          id: 2,
+          title: "All Sales",
+          icon: "mdi-circle-small",
+          route: "/sales",
+          permission: "viewSales",
+        },
+        // {
+        //   id: 3,
+        //   title: "Products",
+        //   icon: "mdi-circle-small",
+        //   route: "/saleProduct",
+        //   permission: "viewSaleProducts",
+        // },
       ]),
     
       menuExpense: ref([
@@ -72,17 +95,17 @@ export const useAuthRepository = defineStore("AuthRepository", {
       menuPeople: ref([
         {
           id: 1,
-          title: "Customer",
+          title: "Stakeholder",
           icon: "mdi-circle-small",
-          route: "/customers",
-          permission: "viewCustomerses",
+          route: "/stakeholders",
+          permission: "viewStakeholders",
         },
         {
           id: 2,
-          title: "Supplier",
+          title: "Owner",
           icon: "mdi-circle-small",
-          route: "/suppliers",
-          permission: "viewSupplierses",
+          route: "/owners",
+          permission: "viewOwners",
         },
         {
           id: 3,
@@ -91,20 +114,14 @@ export const useAuthRepository = defineStore("AuthRepository", {
           route: "/users",
           permission: "viewUsers",
         },
-        {
-          id: 4,
-          title: "Owner",
-          icon: "mdi-circle-small",
-          route: "/owners",
-          permission: "viewOwners",
-        },
-        {
-          id: 5,
-          title: "Loan",
-          icon: "mdi-circle-small",
-          route: "/loans",
-          permission: "loanPeopleViews",
-        },
+        
+        // {
+        //   id: 5,
+        //   title: "Loan",
+        //   icon: "mdi-circle-small",
+        //   route: "/loans",
+        //   permission: "loanPeopleViews",
+        // },
       ]),
     
       menuReport: ref([
@@ -173,6 +190,13 @@ export const useAuthRepository = defineStore("AuthRepository", {
           icon: "mdi-circle-small",
           route: "/currency",
           permission: "viewCurrencies",
+        },
+        {
+          id: 4,
+          title: "Money Account",
+          icon: "mdi-circle-small",
+          route: "/moneyAccount",
+          permission: "viewMoneyAccounts",
         },
       ]),
     }),

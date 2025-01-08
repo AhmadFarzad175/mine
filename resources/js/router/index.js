@@ -19,8 +19,9 @@ import Supplier from "../pages/expenses/Supplier.vue";
 
 import Owners from "../pages/peoples/owner/Owners.vue";
 import OwnerPickup from "../pages/peoples/owner/OwnerPickup/OwnerPickup.vue";
-import Customers from "../pages/peoples/customer/Customers.vue";
-import Partiners from "../pages/peoples/Partiners.vue";
+import Stakeholders from "../pages/peoples/stakeholder/Stakeholders.vue";
+// import Customers from "../pages/peoples/customer/Customers.vue";
+// import Partiners from "../pages/peoples/Partiners.vue";
 import Suppliers from "../pages/peoples/supplier/Suppliers.vue";
 import Users from "../pages/peoples/user/users.vue";
 
@@ -43,6 +44,8 @@ import LoanPayment from "../pages/peoples/loan/LoanPeople/loanPayment.vue";
 
 import Login from "./../Login.vue";
 import currency from "./../pages/settings/currencies/currency.vue"
+
+import moneyAccount from "./../pages/settings/moneyAccount/moneyAccount.vue"
 
 const routes = [
   {
@@ -228,20 +231,37 @@ const routes = [
   },
   
   // People routes
+  // {
+  //   path: "/customers",
+  //   name: "customers",
+  //   component: Customers,
+  //   meta: {
+  //     requiresAuth: true,
+  //     breadcrumb: [
+  //       { text: "People", to: "/owners" },
+        
+  //       { text: "Customers", to: null }
+
+        
+  //     ],
+  //     permissions: ['viewCustomerses']
+
+  //   },
+  // },
   {
-    path: "/customers",
-    name: "customers",
-    component: Customers,
+    path: "/stakeholders",
+    name: "stakeholders",
+    component: Stakeholders,
     meta: {
       requiresAuth: true,
       breadcrumb: [
         { text: "People", to: "/owners" },
         
-        { text: "Customers", to: null }
+        { text: "Stakeholders", to: null }
 
         
       ],
-      permissions: ['viewCustomerses']
+      permissions: ['viewStakeholders']
 
     },
   },
@@ -546,6 +566,20 @@ const routes = [
         { text: "Currency", to: null },
       ],
       permissions: ['viewCurrency']
+
+    },
+  },
+  {
+    path: "/moneyAccount",
+    name: "moneyAccount",
+    component: moneyAccount,
+    meta: {
+      requiresAuth: true,
+      breadcrumb: [
+        { text: "Settings", to: "/systemSetting" },
+        { text: "MoneyAccount", to: null },
+      ],
+      permissions: ['viewMoneyAccount']
 
     },
   },

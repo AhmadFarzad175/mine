@@ -20,7 +20,6 @@ export let useExpenseRepository = defineStore("ExpenseRepository", {
             billExpensePayments: reactive([]),
             bill_expenses_id : ref(1),
             expenseProductsearch: ref(""),
-            singleExpense: reactive([]),
             NoneBillableExpenseSearch: ref(""),
             billableExpenses: reactive([]),
          
@@ -276,6 +275,7 @@ export let useExpenseRepository = defineStore("ExpenseRepository", {
             // Mutate the reactive array correctly
 
             this.currencies = response.data.data;
+            console.log('______ ' + response.data.data);
         
             // Log the response to see the fetched data
         

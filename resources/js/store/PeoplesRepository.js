@@ -19,7 +19,10 @@ export let usePeopleRepository = defineStore("PeopleRepository", {
         
             loanSearch: ref(""), // Ensure it's reactive
             customerSearch: ref(""),
+            stakeholderSearch: ref(""),
             customers: reactive([]),
+            stakeholders: reactive([]),
+            stakeholder: reactive([]),
             customer: reactive([]),
             supplierSearch: ref(""),
             ownerpickupSearch:ref(""),
@@ -150,6 +153,28 @@ export let usePeopleRepository = defineStore("PeopleRepository", {
                 page: this.page,
                 itemsPerPage: this.itemsPerPage,
             });
+        },
+
+         //////////////////////////////////////////// fetch none Billable expenses //////////////////////
+         async fetchStakeholders({ page, itemsPerPage }){
+
+            this.loading = true;
+            try {
+                // const response = await axios.get(``);
+                const response = await axios.get(
+                    `stakeholders?page=${page}&perPage=${itemsPerPage}&search=${this.stakeholderSearch}`
+                );
+                
+
+                console.log(response.data.data)
+        
+                this.stakeholders = response.data.data;
+                this.totalItems = response.data.meta.total;
+            
+                this.loading = false;
+            } catch (err) {
+                // this.error = err.message;
+            }
         },
     
 
