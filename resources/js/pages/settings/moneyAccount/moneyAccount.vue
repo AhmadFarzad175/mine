@@ -100,6 +100,23 @@
                                             </template>
                                             <v-list>
                                                 <v-list-item>
+                                                    <router-link
+                                                        :to="{
+                                                            name: 'moneyAccountProfile',
+                                                            params: {
+                                                                accountId:
+                                                                    item.id, // Dynamically pass the stakeholder ID
+                                                            },
+                                                        }"
+                                                        class="cursor-pointer d-flex gap-3 justify-left pb-3"
+                                                    >
+                                                        <v-list-item-title>
+                                                            <v-icon color="gray"
+                                                                >mdi-account-edit</v-icon
+                                                            >
+                                                            &nbsp; Profile
+                                                        </v-list-item-title>
+                                                    </router-link>
                                                     <v-list-item-title
                                                         class="cursor-pointer d-flex gap-3 justify-left pb-3"
                                                         @click="editItem(item)"
@@ -210,14 +227,8 @@ const editItem = (account) => {
     SettingRepository.moneyAccount = account;
     SettingRepository.updateDialog = true;
 };
-// const editItem = (category) => {
-//     SettingRepository.category = category; // Set the category for editing
-//     SettingRepository.updateDialog = true; // Open the edit dialog
-// };
 
-//  const ViewPaymentDialog = (item) => {
-//    SettingRepository.ViewEarning = true;
-//  };
+
 </script>
 
 <style scoped>
@@ -270,3 +281,5 @@ const editItem = (account) => {
     margin-left: -5px !important;
 }
 </style>
+
+

@@ -50,12 +50,14 @@
                                         :return-object="false"
                                         density="compact"
                                         :rules="[rules.required, rules.number]"
+                                        :disabled="SettingRepository.updateDialog"
                                     >
                                         <!-- Currency swap span inside the input -->
                                         <template v-slot:append>
                                             <v-btn
                                                 class="currency-btn"
                                                 text
+                                                :disabled="SettingRepository.updateDialog"
                                                 @click="swapeCurrency"
                                             >
                                                 {{ formData.currency?.code }}

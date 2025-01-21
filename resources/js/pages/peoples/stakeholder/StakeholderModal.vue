@@ -4,63 +4,178 @@
             transition="dialog-top-transition"
             width="50rem"
             v-model="isDialogActive"
-          
         >
             <template v-slot:default="{ isActive }">
-                <v-card>
+                <v-card class="px-3">
                     <v-card-title class="pt-4 d-flex justify-space-between">
-                        <p class="font-weight-bold">&nbsp;
-                            {{ PeopleRepository.updateDialog ? 'Edit Stakeholder' : 'Create Stakeholder' }}&nbsp;
+                        <p class="font-weight-bold">
+                            &nbsp;{{
+                                PeopleRepository.updateDialog
+                                    ? "Edit Stakeholder"
+                                    : "Create Stakeholder"
+                            }}&nbsp;
                         </p>
                         <v-btn class="px-2" variant="text" @click="closeDialog">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </v-card-title>
                     <v-divider class="mx-6"></v-divider>
-                    <v-spacer></v-spacer>
-
                     <v-card-text>
                         <v-form ref="formRef">
-                            <div class="pt-6">
-                                <v-text-field
-                                    v-model="formData.name"
-                                    variant="outlined"
-                                    label=" * Stakeholder Name"
-                                    style="width: 100%"
-                                    class="pb-4"
-                                    :return-object="false"
-                                    :rules="[rules.required, rules.name]"
-                                    density="compact"
-                                ></v-text-field>
+                            <v-row class="pb-4">
+                                <v-col cols="10">
+                                    <v-text-field
+                                        v-model="formData.name"
+                                        :counter="10"
+                                        label=" Full Name  *"
+                                        variant="outlined"
+                                        density="compact"
+                                        class="mb-3 pr-6"
+                                        :rules="[rules.required, rules.name]"
+                                    ></v-text-field>
+                                    <v-autocomplete
+                                        v-model="formData.type"
+                                        :items="[
+                                            'Supplier',
+                                            'Customer',
+                                            'Expense People',
+                                        ]"
+                                        style="width: 100%"
+                                        label="Type *"
+                                        variant="outlined"
+                                        density="compact"
+                                        :rules="[rules.required]"
+                                        class="pr-6"
+                                    ></v-autocomplete>
+                                </v-col>
+                                <v-col cols="2">
+                                    <div class="image-upload-container">
+                                        <v-file-input
+                                            type="file"
+                                            ref="inputRef"
+                                            style="display: none"
+                                            @change="onChangeImage"
+                                        ></v-file-input>
 
-                                <v-text-field
-                                    v-model="formData.phone"
-                                    variant="outlined"
-                                    label=" Stakeholder Mobile No"
-                                    style="width: 100%"
-                                    class="pb-4"
-                                    :return-object="false"
-                                    density="compact"
-                                ></v-text-field>
+                                        <img
+                                            :src="imageSrc"
+                                            class="image-preview"
+                                            v-show="imageSrc !== null"
+                                        />
 
-
-                                <v-text-field
-                                    v-model="formData.address"
-                                    variant="outlined"
-                                    label="Stakeholder Address"
-                                    style="width: 100%"
-                                    class="pb-4"
-                                    :return-object="false"
-                                    density="compact"
-                                ></v-text-field>
-
-                             
+                                        <div class="image-overlay">
+                                            <button
+                                                v-if="!imageSrc"
+                                                type="button"
+                                                @click="OpenWindow(inputRef)"
+                                                class="overlay-button"
+                                            >
+                                                <v-icon
+                                                    size="x-large"
+                                                    color="blue-grey-lighten-2"
+                                                    >mdi-camera</v-icon
+                                                >
+                                            </button>
+                                            <button
+                                                v-if="imageSrc"
+                                                type="button"
+                                                @click="CloseWindow()"
+                                                class="close-button"
+                                            >
+                                                <v-icon size="small"
+                                                    >mdi-close</v-icon
+                                                >
+                                            </button>
+                                            <button
+                                                v-if="imageSrc"
+                                                type="button"
+                                                @click="OpenWindow(inputRef)"
+                                                class="edit-button"
+                                            >
+                                                <v-icon size="small"
+                                                    >mdi-pencil</v-icon
+                                                >
+                                            </button>
+                                        </div>
+                                    </div>
+                                </v-col>
+                            </v-row>
+                            <div class="d-flex w-100">
+                                <div class="w-50">
+                                    <v-text-field
+                                        type="email"
+                                        v-model="formData.email"
+                                        label=" Email"
+                                        variant="outlined"
+                                        density="compact"
+                                        class="pr-5"
+                                        :rules="[rules.required, rules.email]"
+                                    ></v-text-field>
+                                </div>
+                                <div class="w-50">
+                                    <v-text-field
+                                        v-model="formData.phone"
+                                        variant="outlined"
+                                        type="Phone"
+                                        label="Mobile No"
+                                        style="width: 100%"
+                                        class="pb-4"
+                                        :return-object="false"
+                                        density="compact"
+                                    ></v-text-field>
+                                </div>
                             </div>
+                            <div class="d-flex w-100">
+                                <div class="w-50">
+                                    <v-text-field
+                                        v-model="formData.companyName"
+                                        label=" Company Name"
+                                        variant="outlined"
+                                        density="compact"
+                                        class="mb-3 pr-6"
+                                    ></v-text-field>
+                                </div>
+                                <div class="w-50">
+                                    <v-text-field
+                                        v-model="formData.city"
+                                        label=" City"
+                                        variant="outlined"
+                                        density="compact"
+                                        class="mb-3"
+                                    ></v-text-field>
+                                </div>
+                            </div>
+                            <div class="d-flex w-100">
+                                <div class="w-50">
+                                    <v-text-field
+                                        v-model="formData.country"
+                                        label="Country"
+                                        variant="outlined"
+                                        density="compact"
+                                        class="mb-3 pr-6"
+                                    ></v-text-field>
+                                </div>
+                                <div class="w-50">
+                                    <v-text-field
+                                        v-model="formData.kataNumber"
+                                        label="Kata number"
+                                        variant="outlined"
+                                        density="compact"
+                                        class="mb-3"
+                                    ></v-text-field>
+                                </div>
+                            </div>
+                            <v-textarea
+                                v-model="formData.address"
+                                variant="outlined"
+                                label="Address"
+                                rows="2"
+                            ></v-textarea>
                         </v-form>
                     </v-card-text>
                     <div class="d-flex mb-6 mx-6">
                         <v-btn color="#112F53" @click="submitForm">
-                            &nbsp; &nbsp; {{ PeopleRepository.updateDialog ? 'Update' : 'Create' }} &nbsp; &nbsp;
+                            &nbsp; &nbsp; Save &nbsp; &nbsp;
                         </v-btn>
                     </div>
                 </v-card>
@@ -70,26 +185,57 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed, watch , onMounted  } from "vue";
-import { usePeopleRepository } from "../../../store/PeoplesRepository";
+import { reactive, ref, computed, onMounted } from "vue";
 
- 
- const PeopleRepository = usePeopleRepository();
+import { useRoute } from "vue-router";
+const routeParams = useRoute();
+
+import { usePeopleRepository } from "../../../store/PeoplesRepository";
+const PeopleRepository = usePeopleRepository();
+console.log(PeopleRepository.createDialog);
+
+let imageSrc = ref(null);
+const inputRef = ref(null);
+
+const onChangeImage = (e) => {
+    if (e.target.files.length) {
+        const file = e.target.files[0];
+        imageSrc.value = URL.createObjectURL(file); // Create a URL for the selected file
+        formData.image = file; // Store the file in formData
+        console.log(formData.image);
+    }
+};
+
+const OpenWindow = (action) => {
+    if (action) {
+        ref(action).value.click();
+    }
+};
+const CloseWindow = () => {
+    imageSrc.value = null; // Reset the image preview
+    formData.image = null;
+};
 
 const formData = reactive({
     name: "",
+    type: "",
+    image: "",
     phone: "",
+    email: "",
+    companyName: "",
+    city: "",
+    country: "",
+    kataNumber: "",
     address: "",
 });
 
 const formRef = ref(null);
 
 const rules = {
-    required: (value) => !!value || "This field is required",
-    name: (value) => /^[a-zA-Z\u0600-\u06FF\s]*$/.test(value) || "Name is not correct",
+    required: (value) => !!value || "This Field is required",
 };
 
-// Computed property to handle the dialog visibility
+// Computed property for dialog visibility
 const isDialogActive = computed({
     get() {
         return PeopleRepository.createDialog || PeopleRepository.updateDialog;
@@ -100,53 +246,61 @@ const isDialogActive = computed({
     },
 });
 
-// Watcher to fill form data when editing
-// watch(() => PeopleRepository.updateDialog, (isEditing) => {
-//     if (isEditing) {
-//         formData.name = PeopleRepository.saleProduct?.product_name || '';
-//         formData.details = PeopleRepository.saleProduct?.details || '';
-//     } else {
-//         // Reset form when creating a new product
-//         formData.name = "";
-//         formData.details = "";
-//     }
-// });
-
-onMounted(() => {
-    if(PeopleRepository.updateDialog){
-        formData.id =PeopleRepository.stakeholder?.id || '';
-        formData.name =PeopleRepository.stakeholder?.name || '';
-        formData.phone = PeopleRepository.stakeholder?.phone || '';
-        formData.address = PeopleRepository.stakeholder?.address || '';
-    }
-    else { 
-
-        formData.id = "";
-formData.name = "";
-formData.phone = "";
-formData.address = "";
-        
-        
-        
-    }
-});
-
 // Function to close the dialog
 const closeDialog = () => {
     PeopleRepository.createDialog = false;
     PeopleRepository.updateDialog = false;
+
+    imageSrc.value = null;
 };
+
+// Initialize form data
+
+onMounted(() => {
+    if (PeopleRepository.updateDialog) {
+        // If we are editing an existing Stakeholder, fill the form with the existing data
+        formData.id = PeopleRepository.stakeholder?.id || "";
+        formData.name = PeopleRepository.stakeholder?.name || "";
+        formData.type = PeopleRepository.stakeholder.type || "";
+        formData.image = PeopleRepository.stakeholder.image || "";
+        formData.email = PeopleRepository.stakeholder?.email || "";
+        formData.phone = PeopleRepository.stakeholder?.phone || "";
+        formData.companyName = PeopleRepository.stakeholder?.companyName;
+        formData.city = PeopleRepository.stakeholder?.city;
+        formData.country = PeopleRepository.stakeholder?.country;
+        formData.kataNumber = PeopleRepository.stakeholder?.kataNumber;
+        formData.address = PeopleRepository.stakeholder?.address;
+
+        if (PeopleRepository.updateDialog) {
+            // ... existing code
+            imageSrc.value = PeopleRepository.stakeholder.image || ""; // Set the image source
+        } else {
+            imageSrc.value = null; // Reset for new entries
+        }
+    } else {
+        // If we are creating a new stakeholder, reset the form
+
+        formData.name = "";
+        formData.type = "";
+        formData.image = "";
+        formData.phone = "";
+        formData.email = "";
+        formData.companyName = "";
+        formData.city = "";
+        formData.country = "";
+        formData.kataNumber = "";
+        formData.address = "";
+    }
+});
 
 // Function to handle form submission
 const submitForm = async () => {
     const isValid = await formRef.value.validate();
     if (isValid) {
         if (PeopleRepository.updateDialog) {
-            // Call the update method
-            PeopleRepository.UpdateCustomer(formData.id,formData);
+            PeopleRepository.UpdateStakeholder(formData.id, formData);
         } else {
-            // Call the create method
-            PeopleRepository.CreateCustomer(formData);
+            PeopleRepository.CreateStakeholder(formData);
         }
         closeDialog();
     }
@@ -154,5 +308,70 @@ const submitForm = async () => {
 </script>
 
 <style scoped>
+span {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
 
+.switch {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+.image-upload-container {
+    position: relative;
+    display: inline-block;
+    right: 20px;
+    height: 7.29rem;
+    width: 8rem;
+    margin-right: 1.25px !important;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 1px solid gray;
+}
+
+.image-preview {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay-button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.close-button {
+    position: absolute;
+    bottom: -0.25rem;
+    right: -0.25rem;
+    border: none;
+    background-color: transparent;
+    /* color: #060505; */
+    cursor: pointer;
+}
+
+.edit-button {
+    position: absolute;
+    top: -0.25rem;
+    right: -0.25rem;
+    border: none;
+    background-color: transparent;
+    color: #777777;
+    cursor: pointer;
+}
 </style>

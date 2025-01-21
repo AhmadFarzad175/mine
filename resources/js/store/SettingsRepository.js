@@ -31,6 +31,7 @@ export let useSettingRepository = defineStore("SettingRepository", {
 
 
             // money account
+            accountStatements: reactive([]),
             moneyAccounts: reactive([]),
             moneyAccount: reactive([]),
             moneyAccountSearch: ref(""),
@@ -332,6 +333,24 @@ export let useSettingRepository = defineStore("SettingRepository", {
                 page: this.page,
                 itemsPerPage: this.itemsPerPage,
             });
+        },
+
+         /////////////////////////// Money Account  /////////////////////////////////////
+         async fetchAccountStatements(id) {
+            this.loading = true;
+            const config = {
+                url: "moneyAccounts/statements/" + id,
+            };
+            const response = await axios(config);
+            
+            // Mutate the reactive array correctly
+
+            this.accountStatements = response.data.data;
+            console.log('+++++')
+            console.log(this.accountStatements);
+        
+            this.loading = false;
+            // Log the response to see the fetched data
         },
 
 

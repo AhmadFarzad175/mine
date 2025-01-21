@@ -10,7 +10,7 @@ class Expenses extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable = [
-        'date', 'ref#', 'user_id', 'amount', 'expense_category_id','currency_id','description',
+        'date', 'ref#', 'user_id', 'amount', 'expense_category_id','money_account_id','description',
     ];
 
 
@@ -23,9 +23,9 @@ class Expenses extends Model
         return $this->belongsTo(ExpenseCategory::class);
     }
 
-    public function currency()
+    public function moneyAccount()
 {
-    return $this->belongsTo(Currency::class);
+    return $this->belongsTo(MoneyAccount::class);
 }
 
 

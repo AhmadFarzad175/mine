@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\MoneyAccount;
 use Illuminate\Http\Request;
+use App\Models\MoneyAccountStatement;
 use App\Http\Requests\MoneyAccountRequest;
 use App\Http\Resources\MoneyAccountResource;
+use App\Http\Resources\AccountStatementResource;
 
 class MoneyAccountController extends Controller
 {
@@ -74,5 +76,10 @@ class MoneyAccountController extends Controller
         $ids = $request->input('ids');
         MoneyAccount::whereIn('id', $ids)->delete();
         return response()->noContent();
+    }
+
+    public function accountStatements($id){
+        $statements = MoneyAccountStatement::with(['currency', 'moneyAccount'])->where('money_account_id', $id)->get();
+        return AccountStatementResource::collection($statements);
     }
 }

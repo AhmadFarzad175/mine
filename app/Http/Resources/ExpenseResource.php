@@ -17,15 +17,23 @@ class ExpenseResource extends JsonResource
         return [
             'id' => $this->id,
             'date' => $this->date,
-            'currency_id' => $this->currency_id,
+            'currency_id' => $this->moneyAccount->currency->id,
             
             // 'ref#' => $this->ref,
             'user_name' => $this->user?->name,
             'amount' => $this->amount,
-            'amount_with_currency' => $this->amount . ' ' .  $this->currency?->code,
+            "money_account" => [
+                "id"=> $this->moneyAccount->id,
+                "name"=> $this->moneyAccount->name,
+            ],
+            'amount_with_currency' => $this->amount . ' ' .  $this->moneyAccount->currency->code,
             'category' => [
                 "id" => $this->expenseCategory?->id,
                 "name" => $this->expenseCategory?->name,
+            ],
+            'user' => [
+                "id" => $this->user?->id,
+                "name" => $this->user?->name,
             ],
 
         ];

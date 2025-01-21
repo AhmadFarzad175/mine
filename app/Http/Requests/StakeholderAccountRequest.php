@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StakeholderRequest extends FormRequest
+class StakeholderAccountRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -17,8 +17,9 @@ class StakeholderRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            'company_name' => $this->input('companyName'),
-            'kata_number' => $this->input('kataNumber'),
+            'currency_id' => $this->input('currencyId'),
+            'stakeholder_id' => $this->input('stakeholderId'),
+            'pay_or_receive' => $this->input('payOrReceive'),
         ]);
     }
 
@@ -31,16 +32,10 @@ class StakeholderRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'type' => 'required',
-            'phone' => 'nullable',
-            'email' => 'nullable',
-            'address' => 'nullable',
-            'country' => 'nullable',
-            'city' => 'nullable',
-            'company_name' => 'nullable',
-            'kata_number' => 'nullable',
-            'tazkiraNo' => 'nullable',
-
+            'amount' => 'required',
+            'currency_id' => 'required',
+            'stakeholder_id' => 'required',
+            'pay_or_receive' => 'nullable',
 
         ];
     }

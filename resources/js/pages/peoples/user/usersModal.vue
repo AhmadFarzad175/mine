@@ -1,5 +1,4 @@
 <template>
-
     <div>
         <v-dialog
             transition="dialog-top-transition"
@@ -10,7 +9,11 @@
                 <v-card class="px-3">
                     <v-card-title class="pt-4 d-flex justify-space-between">
                         <p class="font-weight-bold">
-                            {{ PeopleRepository.updateDialog ? 'Edit User' : 'Create User' }}
+                            {{
+                                PeopleRepository.updateDialog
+                                    ? "Edit User"
+                                    : "Create User"
+                            }}
                         </p>
                         <v-btn class="px-2" variant="text" @click="closeDialog">
                             <v-icon>mdi-close</v-icon>
@@ -19,9 +22,7 @@
                     <v-divider class="mx-6"></v-divider>
                     <v-card-text>
                         <v-form ref="formRef">
-
                             <v-row class="pb-4">
-                               
                                 <v-col cols="10">
                                     <v-text-field
                                         v-model="formData.name"
@@ -93,7 +94,7 @@
                                     </div>
                                 </v-col>
                             </v-row>
-                            <div class="d-flex w-100 pb-4" >
+                            <div class="d-flex w-100 pb-4">
                                 <div class="w-50">
                                     <v-text-field
                                         type="email"
@@ -132,32 +133,37 @@
                                         variant="outlined"
                                         density="compact"
                                         item-value="id"
-                                    item-title="name"
+                                        item-title="name"
                                         :rules="[rules.required]"
                                         class="pr-6"
-                                        ></v-autocomplete>
+                                    ></v-autocomplete>
                                 </div>
                                 <div class="w-50 h-100">
                                     <div class="w-100 h-75 d-flex">
                                         <div class="w-100 switch">
-                              <v-switch
-    v-model="formData.status"
-    :true-value="true"
-    :false-value="false"
-    style="height: 2.5rem"
-    class="pr-4 pb-2"
-    :color="formData.status ? 'primary' : 'grey'"
-    :label="formData.status ? 'Active' : 'Inactive'"
-    hide-details
-    density="compact"
-    inset
-></v-switch>
-
-
+                                            <v-switch
+                                                v-model="formData.status"
+                                                :true-value="true"
+                                                :false-value="false"
+                                                style="height: 2.5rem"
+                                                class="pr-4 pb-2"
+                                                :color="
+                                                    formData.status
+                                                        ? 'primary'
+                                                        : 'grey'
+                                                "
+                                                :label="
+                                                    formData.status
+                                                        ? 'Active'
+                                                        : 'Inactive'
+                                                "
+                                                hide-details
+                                                density="compact"
+                                                inset
+                                            ></v-switch>
                                         </div>
                                     </div>
                                 </div>
-                               
                             </div>
                         </v-form>
                     </v-card-text>
@@ -173,15 +179,15 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed , onMounted  } from "vue";
+import { reactive, ref, computed, onMounted } from "vue";
 
 import { useRoute } from "vue-router";
 const routeParams = useRoute();
 
 import { usePeopleRepository } from "../../../store/PeoplesRepository";
 
- const PeopleRepository = usePeopleRepository();
- let imageSrc = ref(null);
+const PeopleRepository = usePeopleRepository();
+let imageSrc = ref(null);
 const inputRef = ref(null);
 
 const onChangeImage = (e) => {
@@ -202,8 +208,7 @@ const CloseWindow = () => {
     formData.image = null;
 };
 
-
- const formData = reactive({
+const formData = reactive({
     image: "",
     name: "",
     phone: "",
@@ -212,7 +217,6 @@ const CloseWindow = () => {
     role: "",
     status: false,
 });
-
 
 const formRef = ref(null);
 
@@ -231,13 +235,11 @@ const isDialogActive = computed({
     },
 });
 
-
 // Function to close the dialog
 const closeDialog = () => {
     PeopleRepository.createDialog = false;
     PeopleRepository.updateDialog = false;
 
-    
     imageSrc.value = null;
 };
 
@@ -245,50 +247,39 @@ const closeDialog = () => {
 
 onMounted(() => {
     PeopleRepository.fetchRoles().then(() => {
+        console.log(PeopleRepository.user);
 
+        if (PeopleRepository.updateDialog) {
+            // If we are editing an existing User, fill the form with the existing data
+            formData.id = PeopleRepository.user?.id || "";
+            formData.image = PeopleRepository.user.image || "";
+            formData.name = PeopleRepository.user?.name || "";
+            // formData.owner_id = PeopleRepository.ownerPickup?.category.id || '';
+            formData.email = PeopleRepository.user?.email || "";
+            formData.phone = PeopleRepository.user?.phone || "";
+            formData.password = "";
+            formData.role = PeopleRepository.user.role;
+            formData.status = PeopleRepository.user.status;
 
-        console.log(PeopleRepository.user)
-
-        
             if (PeopleRepository.updateDialog) {
-                // If we are editing an existing User, fill the form with the existing data
-                formData.id = PeopleRepository.user?.id || '';
-                formData.image = PeopleRepository.user.image || '';
-                formData.name = PeopleRepository.user?.name || '';
-                // formData.owner_id = PeopleRepository.ownerPickup?.category.id || '';
-                formData.email = PeopleRepository.user?.email || '';
-                formData.phone =  PeopleRepository.user?.phone || '';
-                formData.password = '';
-                formData.role= PeopleRepository.user.role;
-                formData.status= PeopleRepository.user.status;
-                
-        
-                if (PeopleRepository.updateDialog) {
                 // ... existing code
-                imageSrc.value = PeopleRepository.user.image || ''; // Set the image source
+                imageSrc.value = PeopleRepository.user.image || ""; // Set the image source
             } else {
                 imageSrc.value = null; // Reset for new entries
             }
-            } else {
-                // If we are creating a new User, reset the form
-                  
-                formData.image= "";
-                formData.name= "";
-            formData.phone= "";
-            formData.email= "";
-            formData.password= "";
-            formData.role= "";
-            formData.status= "";
-        
-        
-            }
+        } else {
+            // If we are creating a new User, reset the form
 
+            formData.image = "";
+            formData.name = "";
+            formData.phone = "";
+            formData.email = "";
+            formData.password = "";
+            formData.role = "";
+            formData.status = "";
+        }
     });
-
-
 });
-
-
 
 // Function to handle form submission
 const submitForm = async () => {
@@ -297,7 +288,6 @@ const submitForm = async () => {
         if (PeopleRepository.updateDialog) {
             PeopleRepository.UpdateUser(formData.id, formData);
         } else {
-
             PeopleRepository.CreateUser(formData);
         }
         closeDialog();
@@ -306,7 +296,6 @@ const submitForm = async () => {
 </script>
 
 <style scoped>
-
 span {
     position: absolute;
     top: 50%;

@@ -122,48 +122,38 @@
                             </v-list>
                             <!-- sales and its item end here -->
 
-                            <!-- expense start here -->
-                            <v-list-item
-                                title="Expense"
-                                prepend-icon="mdi-account-multiple"
-                                color="#112F53"
-                                :class="{ 'active-item': isExpenseVisible }"
-                                @click="toggleExpense"
-                                v-if="hasExpensePermission"
-                            ></v-list-item>
+                            <!-- Expense Menu Start -->
+<v-list-item
+    title="Expense"
+    prepend-icon="mdi-account-multiple"
+    color="#112F53"
+    :class="{ 'active-item': isExpenseVisible }"
+    @click="toggleExpense"
+    v-if="hasExpensePermission"
+/>
 
-                            <v-list v-if="isExpenseVisible">
-                                <router-link
-                                    v-for="item in AuthRepository.menubar
-                                        .menuExpense"
-                                    :key="item.id"
-                                    :to="item.route"
-                                    class="no-underline menu-title"
-                                    :class="{
-                                        'active-item':
-                                            selectedExpense === item.id,
-                                    }"
-                                    exact-active-class="bg-primary text-white"
-                                    @click="setSelectedExpense(item.id)"
-                                >
-                                    <v-list-item
-                                        v-if="
-                                            AuthRepository.permissions.includes(
-                                                item.permission
-                                            )
-                                        "
-                                        :title="item.title"
-                                        :prepend-icon="item.icon"
-                                        color="#112F53"
-                                        :class="{
-                                            'active-sub-item':
-                                                selectedExpense === item.id,
-                                        }"
-                                        class="child submenu-item"
-                                    />
-                                </router-link>
-                            </v-list>
-                            <!-- expense end here -->
+<v-list v-if="isExpenseVisible">
+    <router-link
+        v-for="item in AuthRepository.menubar.menuExpense"
+        :key="item.id"
+        :to="item.route"
+        class="no-underline menu-title"
+        :class="{ 'active-item': selectedExpense === item.id }"
+        exact-active-class="bg-primary text-white"
+        @click="setSelectedExpense(item.id)"
+    >
+        <v-list-item
+            v-if="AuthRepository.permissions.includes(item.permission)"
+            :title="item.title"
+            :prepend-icon="item.icon"
+            color="#112F53"
+            :class="{ 'active-sub-item': selectedExpense === item.id }"
+            class="child submenu-item"
+        />
+    </router-link>
+</v-list>
+<!-- Expense Menu End -->
+
 
                             <!-- people start here -->
                             <v-list-item

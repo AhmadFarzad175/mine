@@ -29,6 +29,7 @@ class CurrencyRequest extends FormRequest
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:255',
             'symbol'=>'required|string',
+            'rate'=>'required',
 
         ];
     }

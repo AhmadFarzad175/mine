@@ -20,6 +20,7 @@ class MoneyAccountResource extends JsonResource
             'amount_with_currency' => $this->amount . ' ' .$this->currency?->code,
             'amount' => $this->amount,
             'symbol' => $this->currency->symbol,
+            'code' => $this->currency->code,
             'currency_id' => $this->currency->id,
         ];
     }

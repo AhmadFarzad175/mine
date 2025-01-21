@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Expenses;
 use App\Models\SaleDetails;
+use App\Models\MoneyAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\MoneyAccountStatement;
 use App\Http\Requests\ExpensesRequest;
 use App\Http\Resources\ExpenseResource;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -38,7 +41,7 @@ class ExpensesController extends Controller
         $search = $request->input('search');
 
         // Eager load relationships and apply search
-        $expenses = Expenses::query()
+        $expenses = Expenses::with(['expenseCategory', 'moneyAccount', 'user'])
             ->search($search);
 
         $expenses = $perPage ? $expenses->latest()->paginate($perPage) : $expenses->latest()->get();
@@ -53,6 +56,22 @@ class ExpensesController extends Controller
         $validated = $request->validated();
         $validated['user_id'] = Auth::id() ?? 1;
         $expense = Expenses::create($validated);
+
+        $moneyAccount = MoneyAccount::where('id', $validated['money_account_id'])->first();
+        $moneyAccount->decrease('amount', $validated['amount']);
+
+
+        MoneyAccountStatement::create([
+            'currency_id' => $moneyAccount->currency->id,
+            'money_account_id' => $moneyAccount->id,
+            'type' => "Expense",
+            'date' => Carbon::now()->format('Y-m-d'),
+            'amount' => $validated['amount'],
+            'balance' => $moneyAccount->amount,
+            'description' => $validated['description'] ?? null,
+            'pay_or_receive' => "paymentSent",
+            'rate' => $moneyAccount->currency->rate,
+        ]);
         return ExpenseResource::make($expense);
     }
 

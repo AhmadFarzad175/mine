@@ -67,7 +67,7 @@ export const mainMenu = {
             id: 3,
             title: "None Billable Expense",
             icon: "mdi-circle-small",
-            route: "noneBillableExpense",
+            route: "/noneBillableExpense",
             permission: "viewExpenses",
         },
         {

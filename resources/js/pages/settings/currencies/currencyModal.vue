@@ -37,20 +37,35 @@
                                     v-model="formData.code"
                                     variant="outlined"
                                     style="width: 100%"
-                                    label="code"
+                                    label="* code"
                                     :return-object="false"
                                     class="pb-4 rtl-autocomplete"
                                     density="compact"
+                                    :rules="[rules.required]"
+
                                 ></v-text-field>
 
                                 <v-text-field
                                     v-model="formData.symbol"
                                     variant="outlined"
                                     style="width: 100%"
-                                    label="symbol"
+                                    label="* symbol"
                                     :return-object="false"
                                     class="pb-4 rtl-autocomplete"
                                     density="compact"
+                                    :rules="[rules.required]"
+
+                                ></v-text-field>
+                                <v-text-field
+                                    v-model="formData.rate"
+                                    variant="outlined"
+                                    style="width: 100%"
+                                    label="* rate"
+                                    :return-object="false"
+                                    class="pb-4 rtl-autocomplete"
+                                    density="compact"
+                                    :rules="[rules.required]"
+
                                 ></v-text-field>
                             </div>
                         </v-form>
@@ -73,6 +88,9 @@ const SettingRepository = useSettingRepository();
 
 const formData = reactive({
     name: "",
+    code: "",
+    symbol: "",
+    rate: "",
     details: "",
 });
 
@@ -112,12 +130,14 @@ onMounted(() => {
         formData.name =SettingRepository.Currency?.name || '';
         formData.code = SettingRepository.Currency?.code || '';
         formData.symbol = SettingRepository.Currency?.symbol || '';
+        formData.rate = SettingRepository.Currency?.rate || '';
     }
     else { 
         formData.id = "";
         formData.name = "";
         formData.code = "";
         formData.symbol = "";
+        formData.rate = "";
     }
 });
 

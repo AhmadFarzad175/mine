@@ -75,7 +75,7 @@ const loginFunc = async () => {
     if (isValid) {
         try {
             await AuthRepository.Login(formData);
-            console.log("Login successful", formData);
+            // console.log("Login successful", formData);
         } catch (error) {
             console.error("Login failed", error);
         }

@@ -25,11 +25,31 @@ class StakeholderController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('perPage', 10);
-        $search = request()->input('search');
-        $stakeholder = Stakeholder::search($search)->latest()->paginate($perPage);
-
-        return StakeholderResource::collection($stakeholder);
+        $search = $request->input('search');
+        $type = $request->input('type');
+    
+        // Build the query  
+        $query = Stakeholder::query();  
+    
+        if ($type) {
+            // If type is provided, filter by that type
+            $query->where('type', $type);
+        } else {
+            // If no type is provided, exclude the type "Owner"
+            $query->where('type', '!=', 'Owner');
+        }
+    
+        if ($search) {
+            // Apply search filter if search term is provided
+            $query->search($search);  
+        }
+    
+        // Fetch the paginated result  
+        $stakeholders = $query->latest()->paginate($perPage);  
+    
+        return StakeholderResource::collection($stakeholders);
     }
+    
 
     /**
      * Store a newly created resource in storage.

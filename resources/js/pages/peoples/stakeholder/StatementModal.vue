@@ -9,7 +9,11 @@
                 <v-card class="px-3">
                     <v-card-title class="pt-4 d-flex justify-space-between">
                         <p class="font-weight-bold">
-                            {{ ExpensesRepository.updateDialog ? 'Edit Expense' : 'Create Expense' }}
+                            &nbsp;{{
+                                PeopleRepository.updateStatementDialog
+                                    ? props.pay_or_receive == "PayMoney" ? "Edit Pay Money" : "Edit Receive Money"
+                                    : props.pay_or_receive == "PayMoney" ? "create Pay Money" : "create Receive Money"
+                            }}&nbsp;
                         </p>
                         <v-btn class="px-2" variant="text" @click="closeDialog">
                             <v-icon>mdi-close</v-icon>
@@ -30,21 +34,6 @@
                                 ></v-text-field>
 
                                 <v-autocomplete
-                                    v-model="formData.expense_category_id"
-                                    :items="ExpensesRepository.categories"
-                                    variant="outlined"
-                                    label=" * Category"
-                                    style="width: 45%"
-                                    item-value="id"
-                                    item-title="name"
-                                    clearable
-                                    density="compact"
-                                    :rules="[rules.required]"
-                                ></v-autocomplete>
-                            </div>
-
-                            <div class="d-flex justify-space-between mb-6">
-                                <v-autocomplete
                                     v-model="formData.money_account_id"
                                     :items="PeopleRepository.moneyAccounts"
                                     variant="outlined"
@@ -59,7 +48,26 @@
                                         PeopleRepository.updateStatementDialog
                                     "
                                 ></v-autocomplete>
+                            </div>
 
+                            <div class="input_field_flex mb-6">
+                                <v-autocomplete
+                                    v-model="formData.stakeholder_account_id"
+                                    :items="
+                                        PeopleRepository.stakeholderAccounts
+                                    "
+                                    variant="outlined"
+                                    label="Stakeholder Account *"
+                                    style="width: 45%"
+                                    item-value="id"
+                                    item-title="name"
+                                    clearable
+                                    density="compact"
+                                    :rules="[rules.required]"
+                                    :disabled="
+                                        PeopleRepository.updateStatementDialog
+                                    "
+                                ></v-autocomplete>
                                 <v-text-field
                                     v-model="formData.amount"
                                     variant="outlined"
@@ -78,11 +86,11 @@
                                     </span>
                                 </v-text-field>
                             </div>
-
                             <v-textarea
-                                v-model="formData.note"
+                                v-model="formData.description"
                                 variant="outlined"
-                                label="Details"
+                                label="note"
+                                rows="2"
                             ></v-textarea>
                         </v-form>
                     </v-card-text>
@@ -98,18 +106,35 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed , onMounted  } from "vue";
-import { useExpenseRepository } from "./../../store/ExpensesRepository";
+import { reactive, ref, computed, onMounted } from "vue";
 
-const ExpensesRepository = useExpenseRepository();
+import { useRoute } from "vue-router";
+const routeParams = useRoute();
+
+import { usePeopleRepository } from "../../../store/PeoplesRepository";
+const PeopleRepository = usePeopleRepository();
+
+const props = defineProps({
+    stakeId: {
+        type: String,
+        required: true,
+    },
+    pay_or_receive: {
+        type: String,
+        required: true,
+    }
+});
 
 const formData = reactive({
     date: "",
+    currency_id: "",
     amount: "",
-    expense_category_id: "",
+    stakeholder_id: props.stakeId, // Initialize with the prop
+    stakeholder_account_id: "",
     money_account_id: "",
-    note: "",
-
+    description: "",
+    pay_or_receive: props.pay_or_receive,
+    type: props.pay_or_receive == "PayMoney" ? "PaymentSent" : "PaymentReceived"
 });
 
 const formRef = ref(null);
@@ -118,22 +143,6 @@ const rules = {
     required: (value) => !!value || "This Field is required",
 };
 
-// Computed property for dialog visibility
-const isDialogActive = computed({
-    get() {
-        return ExpensesRepository.createDialog || ExpensesRepository.updateDialog;
-    },
-    set(value) {
-        ExpensesRepository.createDialog = value;
-        ExpensesRepository.updateDialog = value;
-    },
-});
-
-// // Function to swap currencies
-// const swapeCurrency = () => {
-//     formData.currencyIndex = (formData.currencyIndex + 1) % ExpensesRepository.currencies.length;
-//     formData.currency = ExpensesRepository.currencies[formData.currencyIndex];
-// };
 // Computed property for the currency code
 const selectedCurrencyCode = computed(() => {
     const selectedAccount = PeopleRepository.moneyAccounts.find(
@@ -148,47 +157,62 @@ const selectedCurrencyCode = computed(() => {
 });
 
 
+// Computed property for dialog visibility
+const isDialogActive = computed({
+    get() {
+        return (
+            PeopleRepository.createStatementDialog ||
+            PeopleRepository.updateStatementDialog
+        );
+    },
+    set(value) {
+        PeopleRepository.createStatementDialog = value;
+        PeopleRepository.updateStatementDialog = value;
+    },
+});
+
 // Function to close the dialog
 const closeDialog = () => {
-    ExpensesRepository.createDialog = false;
-    ExpensesRepository.updateDialog = false;
+    PeopleRepository.createStatementDialog = false;
+    PeopleRepository.updateStatementDialog = false;
 };
 
 // Initialize form data
-formData.date = ExpensesRepository.getTodaysDate();
 
 onMounted(() => {
-    if (ExpensesRepository.updateDialog) {
-        console.log(ExpensesRepository.currencies, ExpensesRepository.singleExpense)
-        // If we are editing an existing expense, fill the form with the existing data
-        formData.id = ExpensesRepository.singleExpense?.id || '';
-        formData.date = ExpensesRepository.singleExpense?.date || '';
-        formData.amount = ExpensesRepository.singleExpense?.amount || '';
-        formData.money_account_id = ExpensesRepository.singleExpense?.money_account_id || '';
-        formData.expense_category_id = ExpensesRepository.singleExpense?.category.id || '';
-        formData.note = ExpensesRepository.singleExpense?.note || '';
-
-        
+    if (PeopleRepository.updateStatementDialog) {
+        // If we are editing an existing Stakeholder, fill the form with the existing data
+        formData.id = PeopleRepository.stakeholderStatement?.id || "";
+        formData.date = PeopleRepository.stakeholderStatement?.date || "";
+        formData.currency_id =
+            PeopleRepository.stakeholderStatement?.currency.id || "";
+        formData.amount = PeopleRepository.stakeholderStatement?.amount || "";
+        formData.money_account_id =
+            PeopleRepository.stakeholderStatement?.money_account_id || "";
+        formData.stakeholder_account_id =
+            PeopleRepository.stakeholderStatement?.stakeholder_account_id || "";
+        formData.description =
+            PeopleRepository.stakeholderStatement?.description || "";
     } else {
-        // If we are creating a new expense, reset the form
-        formData.id = "";
-        formData.date = ExpensesRepository.getTodaysDate();
+        // If we are creating a new stakeholder, reset the form
+
+        formData.date = PeopleRepository.getTodaysDate();
+        formData.currency_id = "";
         formData.amount = "";
-        formData.expense_category_id = "";
-        formData.note = "";
-        formData.money_account_id = ''
+        formData.money_account_id = "";
+        formData.stakeholder_account_id = "";
+        formData.description = "";
     }
 });
-
 
 // Function to handle form submission
 const submitForm = async () => {
     const isValid = await formRef.value.validate();
     if (isValid) {
-        if (ExpensesRepository.updateDialog) {
-            ExpensesRepository.UpdateNoneBillableExpense(formData.id, formData);
+        if (PeopleRepository.updateStatementDialog) {
+            PeopleRepository.UpdateStakeholderAccount(formData.id, formData);
         } else {
-            ExpensesRepository.CreateNoneBillableExpense(formData);
+            PeopleRepository.CreateStakeholderStatement(formData);
         }
         closeDialog();
     }
@@ -201,18 +225,79 @@ const submitForm = async () => {
     gap: 1.5em;
 }
 
-.currency-btn {
+.span {
+    background-color: #fef1fe;
+    position: absolute;
+    right: 1px; /* Adjust this value to change the distance from the left edge */
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0.5rem 0.6rem;
+}
+
+span {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.switch {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+.image-upload-container {
+    position: relative;
+    display: inline-block;
+    right: 20px;
+    height: 7.29rem;
+    width: 8rem;
+    margin-right: 1.25px !important;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 1px solid gray;
+}
+
+.image-preview {
     height: 100%;
-    color: #112F53;
-    background-color: #ecf1f4;
+    width: 100%;
+    object-fit: cover;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay-button {
+    border: none;
+    background-color: transparent;
     cursor: pointer;
-    padding: 0 12px;
-    border-left: 1px solid #dcdcdc;
-    margin: 0; /* Remove any space */
 }
 
-.v-text-field {
-    padding-right: 0 !important; /* Ensure no extra padding */
+.close-button {
+    position: absolute;
+    bottom: -0.25rem;
+    right: -0.25rem;
+    border: none;
+    background-color: transparent;
+    /* color: #060505; */
+    cursor: pointer;
 }
 
+.edit-button {
+    position: absolute;
+    top: -0.25rem;
+    right: -0.25rem;
+    border: none;
+    background-color: transparent;
+    color: #777777;
+    cursor: pointer;
+}
 </style>

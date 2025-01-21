@@ -1,18 +1,22 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\salesController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LoanPeopleController;
 use App\Http\Controllers\BillExpenseController;
 use App\Http\Controllers\OwnerPickupController;
 use App\Http\Controllers\SalePaymentController;
+use App\Http\Controllers\StakeholderController;
+use App\Http\Controllers\MoneyAccountController;
 use App\Http\Controllers\salesProductsController;
 use App\Http\Controllers\SystemSettingController;
 use App\Http\Controllers\CustomerReportController;
@@ -20,17 +24,15 @@ use App\Http\Controllers\ExpensePaymentController;
 use App\Http\Controllers\ExpenseProductController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\ExpenseCategoryController;
+use App\Http\Controllers\LoanPaymentSentController;
 use App\Http\Controllers\ProfitLossReportController;
 use App\Http\Controllers\OwnerPickupReportController;
+use App\Http\Controllers\StakeholderAccountController;
 use App\Http\Controllers\CustomerSalesReportController;
-use App\Http\Controllers\ExpenseProductReportController;
-use App\Http\Controllers\ExpenseCategoryReportController;
-use App\Http\Controllers\LoanPeopleController;
-use App\Http\Controllers\LoanPaymentSentController;
 use App\Http\Controllers\LoanPaymentReceivedController;
-use App\Http\Controllers\MoneyAccountController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\StakeholderController;
+use App\Http\Controllers\ExpenseProductReportController;
+use App\Http\Controllers\StakeholderStatementController;
+use App\Http\Controllers\ExpenseCategoryReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,6 +87,8 @@ Route::apiResource('Suppliers',SupplierController::class);
 
 Route::apiResource('stakeholders', StakeholderController::class);
 Route::post('stakeholders/update/{stakeholder}', [StakeholderController::class, 'update']);
+Route::apiResource('stakeholderAccounts', StakeholderAccountController::class);
+Route::apiResource('stakeholderStatements', StakeholderStatementController::class);
 
 
 
@@ -93,6 +97,7 @@ Route::post('stakeholders/update/{stakeholder}', [StakeholderController::class, 
 // currency added backend
 Route::apiResource('currency', CurrencyController::class);
 Route::apiResource('moneyAccounts', MoneyAccountController::class);
+Route::get('moneyAccounts/statements/{id}', [MoneyAccountController::class, 'accountStatements']);
 
 //////////////////// REports //////////////////////
 

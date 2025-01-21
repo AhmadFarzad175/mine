@@ -4,13 +4,17 @@
             transition="dialog-top-transition"
             width="50rem"
             v-model="isDialogActive"
-          
         >
             <template v-slot:default="{ isActive }">
                 <v-card>
                     <v-card-title class="pt-4 d-flex justify-space-between">
-                        <p class="font-weight-bold">&nbsp;
-                            {{ PeopleRepository.updateDialog ? 'Edit Owner' : 'Create Owner' }}&nbsp;
+                        <p class="font-weight-bold">
+                            &nbsp;
+                            {{
+                                PeopleRepository.updateDialog
+                                    ? "Edit Owner"
+                                    : "Create Owner"
+                            }}&nbsp;
                         </p>
                         <v-btn class="px-2" variant="text" @click="closeDialog">
                             <v-icon>mdi-close</v-icon>
@@ -42,15 +46,18 @@
                                     :return-object="false"
                                     density="compact"
                                 ></v-text-field>
-
-
-                            
                             </div>
                         </v-form>
                     </v-card-text>
                     <div class="d-flex mb-6 mx-6">
                         <v-btn color="#112F53" @click="submitForm">
-                            &nbsp; &nbsp; {{ PeopleRepository.updateDialog ? 'Update' : 'Create' }} &nbsp; &nbsp;
+                            &nbsp; &nbsp;
+                            {{
+                                PeopleRepository.updateDialog
+                                    ? "Update"
+                                    : "Create"
+                            }}
+                            &nbsp; &nbsp;
                         </v-btn>
                     </div>
                 </v-card>
@@ -60,27 +67,29 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed, watch , onMounted  } from "vue";
+import { reactive, ref, computed, watch, onMounted } from "vue";
 import { usePeopleRepository } from "../../../store/PeoplesRepository";
 
- 
- const PeopleRepository = usePeopleRepository();
+const PeopleRepository = usePeopleRepository();
 
 const formData = reactive({
     name: "",
     phone: "",
+    type: "Owner",
 });
 
 const formRef = ref(null);
 
 const rules = {
     required: (value) => !!value || "This field is required",
-    name: (value) => /^[a-zA-Z\u0600-\u06FF\s]*$/.test(value) || "Name is not correct",
+    name: (value) =>
+        /^[a-zA-Z\u0600-\u06FF\s]*$/.test(value) || "Name is not correct",
 };
 
 // Computed property to handle the dialog visibility
 const isDialogActive = computed({
     get() {
+        console.log(PeopleRepository.createDialog || PeopleRepository.updateDialog)
         return PeopleRepository.createDialog || PeopleRepository.updateDialog;
     },
     set(value) {
@@ -102,19 +111,14 @@ const isDialogActive = computed({
 // });
 
 onMounted(() => {
-    if(PeopleRepository.updateDialog){
-        formData.id =PeopleRepository.owner?.id || '';
-        formData.name =PeopleRepository.owner?.name || '';
-        formData.phone = PeopleRepository.owner?.phone || '';
-    }
-    else { 
-
+    if (PeopleRepository.updateDialog) {
+        formData.id = PeopleRepository.stakeholder?.id || "";
+        formData.name = PeopleRepository.stakeholder?.name || "";
+        formData.phone = PeopleRepository.stakeholder?.phone || "";
+    } else {
         formData.id = "";
-formData.name = "";
-formData.phone = "";
-        
-        
-        
+        formData.name = "";
+        formData.phone = "";
     }
 });
 
@@ -130,16 +134,14 @@ const submitForm = async () => {
     if (isValid) {
         if (PeopleRepository.updateDialog) {
             // Call the update method
-            PeopleRepository.UpdateOwners(formData.id,formData);
+            PeopleRepository.UpdateStakeholder(formData.id, formData);
         } else {
             // Call the create method
-            PeopleRepository.CreateOwners(formData);
+            PeopleRepository.CreateStakeholder(formData);
         }
         closeDialog();
     }
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

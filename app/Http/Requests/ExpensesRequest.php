@@ -14,14 +14,6 @@ class ExpensesRequest extends FormRequest
         return true;
     }
 
-    public function prepareForValidation(){
-        $this->merge([
-            
-            'currency_id' => $this->input('currency.id'),
-
-        ]);
-        // dd(Request());
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -33,10 +25,9 @@ class ExpensesRequest extends FormRequest
         return [
             'date' => 'required|date',
             'expense_category_id' => 'required',
-            'currency_id' => 'required|integer',
+            'money_account_id' => 'required|integer',
             'amount' => 'required|numeric',
             'description' => 'nullable|string',
-
         ];
     }
 }

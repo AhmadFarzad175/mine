@@ -2,12 +2,12 @@
     <OwnerModal
         v-if="PeopleRepository.createDialog || PeopleRepository.updateDialog"
     />
-    <OwnerPickupModal
+    <!-- <OwnerPickupModal
         v-if="
             PeopleRepository.ownerCreateDialog ||
             PeopleRepository.ownerUpdateDialog
         "
-    />
+    /> -->
 
     <!-- <ProductModal v-if="PeopleRepository.createDialog || PeopleRepository.updateDialog" /> -->
 
@@ -25,7 +25,7 @@
                         style="width: 300px"
                         single-line
                         hide-details
-                        v-model="PeopleRepository.ownerSearch"
+                        v-model="PeopleRepository.stakeholderSearch"
                     ></v-text-field>
                 </div>
                 <div class="btn">
@@ -54,13 +54,17 @@
                                     "
                                     :headers="headers"
                                     :items-length="PeopleRepository.totalItems"
-                                    :items="PeopleRepository.owners"
+                                    :items="PeopleRepository.stakeholders"
                                     :loading="PeopleRepository.loading"
-                                    :search="PeopleRepository.ownerSearch"
+                                    :search="PeopleRepository.stakeholderSearch"
                                     @update:options="
-                                        PeopleRepository.fetchOwners
+                                        (options) =>
+                                            PeopleRepository.fetchStakeholders({
+                                                ...options,
+                                                type: 'Owner',
+                                            })
                                     "
-                                    :item-key="PeopleRepository.owners"
+                                    :item-key="PeopleRepository.stakeholders"
                                     hover
                                     class="mx-auto mt-4 no-padding-table"
                                 >
@@ -104,7 +108,7 @@
                                             </template>
                                             <v-list>
                                                 <v-list-item>
-                                                    <v-list-item-title
+                                                    <!-- <v-list-item-title
                                                         class="cursor-pointer d-flex gap-3 justify-left pb-3"
                                                         @click="
                                                             createPickup(item)
@@ -117,9 +121,8 @@
                                                     </v-list-item-title>
 
                                                     <router-link
-                                                    :to="
-                                                            '/owner/' +
-                                                            item.id
+                                                        :to="
+                                                            '/owner/' + item.id
                                                         "
                                                     >
                                                         <v-list-item-title
@@ -130,7 +133,7 @@
                                                             >
                                                             &nbsp; Show Pickups
                                                         </v-list-item-title>
-                                                    </router-link>
+                                                    </router-link> -->
 
                                                     <v-list-item-title
                                                         class="cursor-pointer d-flex gap-3 justify-left pb-3"
@@ -171,7 +174,7 @@
 import { watch } from "vue";
 import { usePeopleRepository } from "../../../store/PeoplesRepository";
 import OwnerModal from "./OwnerModal.vue";
-import OwnerPickupModal from "./OwnerPickup/OwnerPickupModal.vue";
+// import OwnerPickupModal from "./OwnerPickup/OwnerPickupModal.vue";
 
 const PeopleRepository = usePeopleRepository();
 import { ref, computed } from "vue";
@@ -179,18 +182,18 @@ const selectedItems = ref([]); // Track selected checkboxes
 const selectAll = ref(false); // Track the "select all" checkbox
 
 // Calculate if the select all checkbox should be indeterminate
-//  const indeterminate = computed(() => selectedItems.value.length > 0 && selectedItems.value.length < PeopleRepository.owners.length);
+//  const indeterminate = computed(() => selectedItems.value.length > 0 && selectedItems.value.length < PeopleRepository.stakeholders.length);
 
 const indeterminate = computed(() => {
     return (
         selectedItems.value.length > 0 &&
-        selectedItems.value.length < PeopleRepository.owners.length
+        selectedItems.value.length < PeopleRepository.stakeholders.length
     );
 });
 
 // Watch the selectedItems to automatically check/uncheck selectAll
 watch(selectedItems, (newVal) => {
-    selectAll.value = newVal.length === PeopleRepository.owners.length;
+    selectAll.value = newVal.length === PeopleRepository.stakeholders.length;
 });
 
 // Toggle the selection of all items
@@ -198,7 +201,7 @@ const toggleSelectAll = () => {
     if (selectAll.value) {
         selectedItems.value = [];
     } else {
-        selectedItems.value = PeopleRepository.owners.slice();
+        selectedItems.value = PeopleRepository.stakeholders.slice();
     }
 };
 
@@ -222,19 +225,18 @@ const headers = [
 //  };
 
 const deleteItem = async (item) => {
-    await PeopleRepository.deleteOwners(item.id);
+    await PeopleRepository.deleteStakeholder(item.id, "Owner");
 };
 
-const editItem = (owner) => {
-    PeopleRepository.owner = owner;
+const editItem = (stakeholder) => {
+    PeopleRepository.stakeholder = stakeholder;
     PeopleRepository.updateDialog = true;
 };
 
-const createPickup = (owner) => {
-    PeopleRepository.owner = owner;
-    PeopleRepository.ownerCreateDialog = true;
+const createPickup = (stakeholder) => {
+    PeopleRepository.stakeholder = stakeholder;
+    PeopleRepository.stakeholderCreateDialog = true;
 };
-PeopleRepository.fetchCurrencies();
 
 // const editItem = (category) => {
 //     PeopleRepository.category = category; // Set the category for editing
